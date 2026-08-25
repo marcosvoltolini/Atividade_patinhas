@@ -1,0 +1,19 @@
+CREATE DATABASE IF NOT EXISTS pata_marcos;
+
+USE pata_marcos;
+
+CREATE TABLE IF NOT EXISTS cliente(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+);
+
+CREATE TABLE IF NOT EXISTS animais(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    especie VARCHAR(50) NOT NULL,
+    raca VARCHAR(50) NOT NULL,
+    idade INT NOT NULL,
+    cliente_id INT NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id)
+);
