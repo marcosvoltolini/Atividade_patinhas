@@ -1,8 +1,8 @@
 <?php
 
 include "infra/conexao.php";
-$animais = myslqli_query($conexao, "SELECT * FROM animais");
-$clientes = mysqli_query($conexao, "SELECT * FROM clientes");
+$animais = mysqli_query($conexao, "SELECT * FROM animais");
+$clientes = mysqli_query($conexao, "SELECT * FROM cliente");
 ?>
 
 <html lang="en">
@@ -12,6 +12,85 @@ $clientes = mysqli_query($conexao, "SELECT * FROM clientes");
     <title>Patinhas</title>
 </head>
 <body>
-    
+    <header>
+        <h1>Atividade_Patinhas</h1>
+    </header>
+    <main>
+
+<h2>Cadastre um novo cliente</h2>
+<form action="public/cadastrar_cliente.php" method="POST">
+
+<label>Nome:</label>
+<input type="text" name="nome_cliente" required>
+<br>
+
+<label>Email:</label>
+<input type="text" name="email" required>
+<br>
+
+<button type="submit">Cliente</button>
+
+</form>
+
+
+<h2>Adicione um novo Animal!</h2>
+<form action="public_animais/cadastrar_animais.php" method="POST">
+    <label for="nome_animal">Nome do animal:</label>
+    <input type="text" name="nome_animal" required>
+    <br>
+    <label for="especie">Espécie:</label>
+    <input type="text" name="especie" required>
+    <br>
+    <label for="raca">raça do animal:</label>
+    <input type="text" name="raca" required>
+    <br>
+    <label for="idade">idade:</label>
+    <input type="number" step="0.01" name="idade" required>
+    <br>
+    <label for="cliente_id">Cadastrado por:</label>
+    <select name="cliente_id" required>
+        <option value="">Selecione um usuário</option>
+        <?php while ($cliente = mysqli_fetch_assoc($clientes)) { ?>
+            <option value="<?php echo htmlspecialchars($cliente["id"]); ?>">
+                <?php echo htmlspecialchars($cliente["nome"]); ?>
+            </option>
+        <?php } ?>
+    </select>
+    <br>
+    <button type="submit">Cadastrar Animal</button>
+</form>
+
+<div>
+    <h2>Animais Cadastrados</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Espécie</th>
+            <th>Raça</th>
+            <th>Idade</th>
+            <th>Ações</th>
+        </tr>
+        <?php while ($animal = mysqli_fetch_assoc($animais)) { ?>
+            <tr>
+                <td><?php echo htmlspecialchars($animal["id"]) ?></td>
+                <td><?php echo htmlspecialchars($animal["nome"]) ?></td>
+                <td><?php echo htmlspecialchars($animal["especie"]) ?></td>
+                <td><?php echo htmlspecialchars($animal["raca"]) ?></td>
+                <td><?php echo htmlspecialchars($animal["idade"]) ?></td>
+                <td>
+                    <a href="public_animais/editar_animais.php?id=<?php echo $animal["id"] ?>">Editar</a>
+                    <a href="public_animais/excluir_animais.php?id=<?php echo $animal["id"] ?>">Excluir</a>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+
+    </main>
+    <footer>
+
+    </footer>
+
 </body>
 </html>

@@ -4,7 +4,7 @@ $host = "localhost";
 
 $usuario = "root";
 
-$senha = "";
+$senha = "root";
 
 $banco = "pata_marcos";
 
