@@ -1,11 +1,18 @@
 <?php
 
 include "infra/conexao.php";
-$animais = mysqli_query($conexao, "SELECT * FROM animais");
+
+$animais = mysqli_query($conexao, "
+    SELECT animais.id, animais.nome, animais.especie, animais.raca, animais.idade,
+           cliente.nome AS nome_cliente
+    FROM animais
+    INNER JOIN cliente ON animais.cliente_id = cliente.id
+");
+
 $clientes = mysqli_query($conexao, "SELECT * FROM cliente");
 ?>
 
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,7 +52,7 @@ $clientes = mysqli_query($conexao, "SELECT * FROM cliente");
     <input type="text" name="raca" required>
     <br>
     <label for="idade">idade:</label>
-    <input type="number" step="0.01" name="idade" required>
+    <input type="number" step="1" name="idade" required>
     <br>
     <label for="cliente_id">Cadastrado por:</label>
     <select name="cliente_id" required>
@@ -60,15 +67,19 @@ $clientes = mysqli_query($conexao, "SELECT * FROM cliente");
     <button type="submit">Cadastrar Animal</button>
 </form>
 
+<br>
+<a href="public_animais/associar_animal.php">Associar animal a um cliente</a>
+
 <div>
     <h2>Animais Cadastrados</h2>
-    <table>
+    <table border="1" cellpadding="8">
         <tr>
             <th>ID</th>
             <th>Nome</th>
             <th>Espécie</th>
             <th>Raça</th>
             <th>Idade</th>
+            <th>Dono</th>
             <th>Ações</th>
         </tr>
         <?php while ($animal = mysqli_fetch_assoc($animais)) { ?>
@@ -78,9 +89,12 @@ $clientes = mysqli_query($conexao, "SELECT * FROM cliente");
                 <td><?php echo htmlspecialchars($animal["especie"]) ?></td>
                 <td><?php echo htmlspecialchars($animal["raca"]) ?></td>
                 <td><?php echo htmlspecialchars($animal["idade"]) ?></td>
+                <td><?php echo htmlspecialchars($animal["nome_cliente"]) ?></td>
                 <td>
                     <a href="public_animais/editar_animais.php?id=<?php echo $animal["id"] ?>">Editar</a>
-                    <a href="public_animais/excluir_animais.php?id=<?php echo $animal["id"] ?>">Excluir</a>
+                    |
+                    <a href="public_animais/excluir_animais.php?id=<?php echo $animal["id"] ?>"
+                        onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
                 </td>
             </tr>
         <?php } ?>
